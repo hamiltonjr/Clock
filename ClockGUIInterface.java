@@ -1,3 +1,14 @@
+/**
+ * This is an open source software developed as a study of development using Eclipse IDE amd its
+ * WindowBuilder Pro GUI Designer plugin. The app has some interesting features:
+ * - default status is showing only time, but the interface allow the user select for showing also
+ * date and day of week selecting check boxes in the Config menu.
+ * - user can click in Help menu and know some operation info and about the app
+ * - user can quit the app clicking Quit.
+ * 
+ * @author Hamilton G. Jr (hamiltonjr2010@gmail.com)
+ * @version 2018 11 24
+ */
 package clock;
 
 import java.awt.BorderLayout;
@@ -8,9 +19,7 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -23,10 +32,8 @@ import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
 
 public class ClockGUIInterface implements ActionListener {
-
 	private JFrame frmDesktopClock;
 	private JTextField txtDisplay;
-	private static Calendar c;
 	private JTextField txtDate;
 	private JTextField txtDayOfWeek;
 	private JMenuBar menuBar;
@@ -36,10 +43,10 @@ public class ClockGUIInterface implements ActionListener {
 	private JMenu menuHelp;
 	private JMenuItem menuItemAbout;
 	private JMenuItem menuItemInfo;
+	private JMenuItem menuItemQuit;
 	private SimpleDateFormat sdfDate;
 	private SimpleDateFormat sdfHour;
 	private SimpleDateFormat sdfDay;
-	private JMenuItem mntmQuit;
 
 	/**
 	 * Launch the application.
@@ -51,24 +58,24 @@ public class ClockGUIInterface implements ActionListener {
 					ClockGUIInterface window = new ClockGUIInterface();
 					window.frmDesktopClock.setVisible(true);
 				} catch (Exception e) {
-					//JOptionPane.showMessageDialog(null, "ERROR trying to open window!");
-					e.setStackTrace(null);
+					JOptionPane.showMessageDialog(null, "ERROR trying to open window!");
 				}
 			}			
 		});
 	}
 
 	/**
-	 * Create the application.
+	 * Create the application: this is the constructor that creates the app frame
 	 */
 	public ClockGUIInterface() {
 		initialize();
 	}	
 	
 	/**
-	 * Initialize the contents of the frame.
+	 * Initialize the contents of the frame (including the listeners).
 	 */
 	private void initialize() {
+		// frame
 		frmDesktopClock = new JFrame();
 		frmDesktopClock.setBounds(new Rectangle(20, 28, 0, 0));
 		frmDesktopClock.setFont(new Font("DejaVu Sans", Font.PLAIN, 24));
@@ -79,6 +86,7 @@ public class ClockGUIInterface implements ActionListener {
 		frmDesktopClock.setBounds(100, 100, 360, 168);
 		frmDesktopClock.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
+		// time display (central part of entire display)
 		txtDisplay = new JTextField();
 		txtDisplay.setBorder(null);
 		txtDisplay.setEditable(false);
@@ -90,6 +98,7 @@ public class ClockGUIInterface implements ActionListener {
 		frmDesktopClock.getContentPane().add(txtDisplay, BorderLayout.CENTER);
 		txtDisplay.setColumns(10);
 		
+		// date display (top part of entire display)
 		txtDate = new JTextField();
 		txtDate.setBorder(new EmptyBorder(2, 10, 2, 0));
 		txtDate.setFont(new Font("DejaVu Sans", Font.BOLD, 16));
@@ -100,6 +109,7 @@ public class ClockGUIInterface implements ActionListener {
 		frmDesktopClock.getContentPane().add(txtDate, BorderLayout.NORTH);
 		txtDate.setColumns(10);
 		
+		// day of week display (bottom part of entire display)
 		txtDayOfWeek = new JTextField();
 		txtDayOfWeek.setBorder(new EmptyBorder(2, 0, 2, 10));
 		txtDayOfWeek.setForeground(Color.CYAN);
@@ -110,9 +120,11 @@ public class ClockGUIInterface implements ActionListener {
 		frmDesktopClock.getContentPane().add(txtDayOfWeek, BorderLayout.SOUTH);
 		txtDayOfWeek.setColumns(10);
 		
+		// menu bar
 		menuBar = new JMenuBar();
 		frmDesktopClock.setJMenuBar(menuBar);
 		
+		// menu config and items
 		menuConfig = new JMenu("Config");
 		menuBar.add(menuConfig);
 		cbDate = new JCheckBox("Date");
@@ -120,10 +132,12 @@ public class ClockGUIInterface implements ActionListener {
 		cbDayOfWeek = new JCheckBox("Day of week");
 		menuConfig.add(cbDayOfWeek);
 		
+		/ menu Help and items
 		menuHelp = new JMenu("Help");
 		menuBar.add(menuHelp);
 		menuItemInfo = new JMenuItem("Info");
 		menuItemInfo.addActionListener(new ActionListener() {
+			// show Info message
 			public void actionPerformed(ActionEvent e) {
 				String text = 	"Info\n" +
 								"The default format is showing only the clock. If the user\n" +
@@ -140,6 +154,7 @@ public class ClockGUIInterface implements ActionListener {
 		menuHelp.add(menuItemInfo);
 		menuItemAbout = new JMenuItem("About");
 		menuItemAbout.addActionListener(new ActionListener() {
+			// show About message
 			public void actionPerformed(ActionEvent e) {
 				String text = 	"About Desktop Clock\n"+
 								"Desktop Clock is an open source software implemented\n" + 
@@ -153,18 +168,22 @@ public class ClockGUIInterface implements ActionListener {
 		});
 		menuHelp.add(menuItemAbout);
 		
-		mntmQuit = new JMenuItem("Quit");
-		mntmQuit.addActionListener(new ActionListener() {
+		// menu item Quit
+		menuItemQuit = new JMenuItem("Quit");
+		menuItemQuit.addActionListener(new ActionListener() {
+			// quit the app
 			public void actionPerformed(ActionEvent e) {
 				System.exit(0);
 			}
 		});
-		menuBar.add(mntmQuit);
+		menuBar.add(menuItemQuit);
 		
-		sdfDate = new SimpleDateFormat("dd/MM/yyyy");
-		sdfHour = new SimpleDateFormat("HH:mm:ss");
-		sdfDay = new SimpleDateFormat("EEEE");
+		// instantiate the date formats
+		sdfDate = new SimpleDateFormat("dd/MM/yyyy"); 	// date Brazilian-like
+		sdfHour = new SimpleDateFormat("HH:mm:ss");		// time European-model
+		sdfDay = new SimpleDateFormat("EEEE");			// day of week (by extension)
 		
+		// run 1 second and start
 		Timer t = new Timer(1000, this);
 	    t.start();
 	}
@@ -173,13 +192,16 @@ public class ClockGUIInterface implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 	    Date d = new Date();
 	    
+	    // show date if Date check box is selected
 	    if (cbDate.isSelected())
 	    	txtDate.setText(sdfDate.format(d));
 	    else
 	    	txtDate.setText("");
 	    
+	    // show time (always)
 	    txtDisplay.setText(sdfHour.format(d));
 	    
+	    // show day of week if Day of Week check box is selected
 	    if (cbDayOfWeek.isSelected())
 	    	txtDayOfWeek.setText(sdfDay.format(d));
 	    else
